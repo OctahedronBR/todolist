@@ -1,0 +1,26 @@
+#A Sample/Blank project for Cotopaxi development.
+
+## About CTPX
+
+This project cames with the 'ctpx tool'. Ctpx makes easy to configure and run projects using cotopaxi.
+It uses maven and other dependencies to make all the magic works. 
+If you have no experience with maven, we recommend you to take a look at the Maven2 documentation,
+but don't worry, this script will make it easy (we hope)! If you are using eclipse, install the 
+m2clipse plugin.
+
+The ctpx tool works well on Ubuntu (natty) environments.
+
+Feel free to modify these tool to other distros and let us know!
+
+To start, try 'ctpx help'.
+
+## Using this project without the 'ctpx tool'
+
+TBD
+
+## About Cotopaxi
+
+For more information about cotopaxi, see the cotopaxi official documentation at [address here].
+
+The cotopaxi is a open source project, feel free to contribute with it!
+
