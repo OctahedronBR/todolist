@@ -3,28 +3,35 @@
 	<head>
 		<meta charset="utf-8" />
 		<title>Todo List</title>
+		<link rel="stylesheet" type="text/css" href="css/style.css" media="all" />
+		<link href='http://fonts.googleapis.com/css?family=Merienda+One' rel='stylesheet' type='text/css'>
+		<link href='http://fonts.googleapis.com/css?family=Terminal+Dosis:500' rel='stylesheet' type='text/css'>
 	</head>
 	<body>
-		<header>
-			<h1>Todo List</h1>
-		</header
-		<section>
-    		<form action="/create" method="post" accept-charset="utf-8">
-    			<fieldset>
-    				<input type="text" name="description" placeholder="What needs to be done?" />
-                </fieldset>
-    		</form>
-    		<ul>
-    		#foreach( $todo in $todos )
-    			<li>
-					<div class="todo">
-						<input type="checkbox" data-id="$todo.id" />
-						$todo.description
-						<span class="delete">delete</span>
-					</div>
-				</li>
-    		#end
-    		</ul>
-		</section>
-	</body
+		<div id="wrapper">
+			<header>
+    			<h1>Todo List</h1>
+    		</header
+    		<section>
+        		<form action="/create" method="post" accept-charset="utf-8">
+        			<fieldset>
+        				<input type="text" name="description" placeholder="What needs to be done?" />
+                    </fieldset>
+        		</form>
+        		<ul>
+        		#foreach( $todo in $todos )
+        			<li>
+    					<div class="todo" data-id="$todo.id">
+    						<input type="checkbox" #if ( $todo.completed ) checked #end />
+    						<span class="description #if ( $todo.completed ) done#end">$todo.description</span>
+    						<span class="delete"></span>
+    					</div>
+    				</li>
+        		#end
+        		</ul>
+    		</section>
+		</div>
+		<script defer src="js/libs/jquery-1.6.4.min.js"></script>
+		<script defer src="js/script.js" /></script>
+	</body>
 </html>
