@@ -18,15 +18,26 @@
  */
 package br.octahedron.cotopaxi.todolist.model;
 
+import java.util.Collection;
+
+import javax.jdo.Query;
+
 import br.octahedron.cotopaxi.datastore.jdo.GenericDAO;
 
 /**
  * @author Vítor Avelino <vitoravelino@octahedron.com.br>
  */
+@SuppressWarnings("unchecked")
 public class TodoDAO extends GenericDAO<Todo> {
 
 	public TodoDAO() {
 		super(Todo.class);
+	}
+	
+	public Collection<Todo> getAllDesc() {
+		Query query = this.datastoreFacade.createQueryForClass(Todo.class);
+		query.setOrdering("id descending");
+		return (Collection<Todo>) query.execute();
 	}
 
 }
