@@ -1,7 +1,9 @@
-#! /bin/bash
+#!/bin/bash
 
 LOG_FILE=/tmp/ctpx.out
 MVN_OUT=/tmp/mvn.out
+
+web_dir=src/main/webapp
 
 ## Internal Functions
 is_ubuntu() {
@@ -104,6 +106,10 @@ backup_pom() {
 	cp pom.xml pom.xml.prev
 }
 
+add_jdoconfig() {
+    mkdir src/main/resources/META-INF
+    cp .extensions/jdoconfig.xml src/main/resources/META-INF
+}
 ## Setup commands
 enable_extensions() {
 	# enable cotopaxi extensions
@@ -117,6 +123,7 @@ enable_extensions() {
 	add_pom ctpx.dependencies
 	add_pom gae.dependencies
 	add_pom tests.dependencies
+	add_jdoconfig
 }
 
 setup_project() {
@@ -135,6 +142,9 @@ setup_project() {
 	then 
 		enable_extensions
 	fi
+
+	# remove empty files
+	find . -name 'empty' | xargs rm 
 }
 
 reset() {
@@ -146,6 +156,7 @@ reset() {
 clean_maven() {
 	# Execute maven clean
 	echo -ne "Cleaning Project...\t"
+	rm -r ${web_dir}/WEB-INF/{classes,lib} &> ${MVN_OUT}
 	mvn clean &> ${MVN_OUT}
 	if [ $? -eq 0 ]
 	then
@@ -161,7 +172,7 @@ clean_maven() {
 build_maven() {
 	# Execute maven package
 	echo -ne "Building Project...\t"
-	mvn package &> ${MVN_OUT}
+	mvn war:inplace &> ${MVN_OUT}
 	if [ $? -eq 0 ]
 	then
 		echo "OK"
@@ -178,8 +189,9 @@ dev_server() {
 	# TODO defines different strategies for different servers"
 	check_gae_sdk
 	echo -ne "Running Project...\t"
-	target_dir="target/$(head -n10 pom.xml | grep -P '(artifactId|version)>' | awk -F'<|>' '{ print $3 }' | xargs | sed 's/ /-/g')"
-	if [ -d ${target_dir} ]
+#	target_dir="target/$(head -n10 pom.xml | grep -P '(artifactId|version)>' | awk -F'<|>' '{ print $3 }' | xargs | sed 's/ /-/g')"
+	target_dir=${web_dir}
+	if [ -d ${target_dir}/WEB-INF/classes ]
 	then
 		echo "OK"
 		echo -e "\nServer output will be redirect to ${LOG_FILE}.\nTry 'tail -f ${LOG_FILE} to see the server output in realtime...\n\nPress ^C to exit server."
@@ -209,26 +221,31 @@ show_help() {
 run_cmd() {
 	cmd=$1
 	shift
+	params=$*
+	if [ $# -eq 0 ] || [ ${params:0:1} != "-" ]
+	then
+		unset params
+	fi
 	case ${cmd} in
 		clean )
-			clean_maven $*
+			clean_maven ${params}
 			;;
 		all )
-			clean_maven $*
-			build_maven $*
+			clean_maven ${params}
+			build_maven ${params}
 			dev_server
 			;;
 		build )
-			build_maven $*
+			build_maven ${params}
 			;;
-		run-server )
+		run-server|run )
 			dev_server
 			;;
 		extensions )
-			enable_extensions $*
+			enable_extensions ${params}
 			;;
 		reset )
-			reset $*
+			reset ${params}
 			;;
 		clean-log ) 
 			clear_log
@@ -237,13 +254,18 @@ run_cmd() {
 			exit 0
 			;;
 		help )
-			show_help $*
+			show_help ${params}
 			;;
 		* )
 			echo "Command not found!" 
-			show_help $*
+			show_help ${params}
 			;;
 	esac
+	# check if theres other commands
+	if [ $# -ne 0 ] && [ -z $params ]
+	then
+		run_cmd $*
+	fi
 }
 
 ## Script Begin
@@ -265,9 +287,9 @@ then
 fi
 
 # run commands
-if [ $# -eq 1 ]
+if [ $# -ne 0 ]
 then
-	run_cmd $1
+	run_cmd $*
 else
 	echo "Cotopaxi interactive shell. Try 'help'"
 	while [ 1 ]
@@ -276,4 +298,3 @@ else
 		run_cmd $cmd
 	done
 fi
-
