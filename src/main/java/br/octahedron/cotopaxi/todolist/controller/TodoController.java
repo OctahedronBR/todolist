@@ -2,11 +2,11 @@ package br.octahedron.cotopaxi.todolist.controller;
 
 import br.octahedron.cotopaxi.controller.Controller;
 import br.octahedron.cotopaxi.controller.ConvertionException;
-import br.octahedron.cotopaxi.controller.Converter.Builder;
 import br.octahedron.cotopaxi.controller.converter.NumberConverter.NumberType;
 import br.octahedron.cotopaxi.inject.Inject;
 import br.octahedron.cotopaxi.todolist.model.Todo;
 import br.octahedron.cotopaxi.todolist.model.TodoDAO;
+import static br.octahedron.cotopaxi.controller.Converter.Builder.*;
 
 public class TodoController extends Controller {
 
@@ -35,14 +35,14 @@ public class TodoController extends Controller {
 	}
 	
 	public void postUpdate() throws ConvertionException {
-		Todo todo = todoDAO.get(in("id", Builder.number(NumberType.LONG)));
-		todo.setCompleted(in("completed", Builder.bool()));
+		Todo todo = todoDAO.get(in("id", number(NumberType.LONG)));
+		todo.setCompleted(in("completed", bool()));
 		todoDAO.save(todo);
 		jsonSuccess();
 	}
 	
 	public void postDelete() throws ConvertionException {
-		todoDAO.delete(in("id", Builder.number(NumberType.LONG)));
+		todoDAO.delete(in("id", number(NumberType.LONG)));
 		jsonSuccess();
 	}
 
