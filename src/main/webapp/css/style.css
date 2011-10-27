@@ -203,7 +203,7 @@ td { vertical-align: top; }
 
 
 /* ==|== primary styles =====================================================
-   Author:
+   Author: Vítor Avelino <vitoravelino@octahedron.com.br>
    ========================================================================== */
 
 html, body {background: url('/img/bg.png') repeat;}
@@ -223,10 +223,20 @@ body, input {font-family: 'Terminal Dosis', sans-serif;}
 	box-shadow: 0 0 8px -1px #444;
 }
 
-header {text-align: center;}
+header {
+	margin-bottom: 23px;
+	text-align: center;
+}
 header h1 {
-	margin-top: 0;
+	margin: 0;
 	font-family: 'Merienda One', cursive;
+}
+header h2 {
+	margin: 0;
+	padding: 0;
+	font-size: 16px;
+	font-weight: normal;
+	font-style: italic;
 }
 
 ul {
@@ -234,24 +244,22 @@ ul {
 	padding: 0;
 	list-style: none;
 }
-
-ul li:hover {background-color: #eee;}
-ul li:first-child {border-top: 1px solid #eee;}
-
 ul li {
 	padding: 5px;
 	border-bottom: 1px solid #eee;
 	position: relative;
 }
+ul li:hover {background-color: #eee;}
+ul li:first-child {border-top: 1px solid #eee;}
+ul li:hover .delete {display: inline;}
 
-input {
+input[type="text"] {
 	width: 364px;
 	padding: 3px;
 }
 
 .description {margin-left: 5px;}
-
-li:hover .delete {display: inline;}
+.done {text-decoration: line-through;}
 .delete {
 	cursor: pointer;
 	width: 15px;
@@ -262,8 +270,6 @@ li:hover .delete {display: inline;}
 	right: 8px;
 	background: url('/img/trash.png') no-repeat;
 }
-
-.done {text-decoration: line-through;}
 
 
 /* ==|== media queries ======================================================
